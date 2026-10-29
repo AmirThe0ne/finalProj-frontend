@@ -1,0 +1,17 @@
+<h1>Admin Dashboard</h1>
+@if (message()) { <p role="alert">{{ message() }}</p> }
+@if (summary(); as summary) {
+  <section>
+    <article><h2>Pending Orders</h2><p>{{ summary.pendingOrders }}</p></article>
+    <article><h2>Orders (24h)</h2><p>{{ summary.newOrdersLast24h }}</p></article>
+    <article><h2>Out of Stock</h2><p>{{ summary.outOfStockCount }}</p></article>
+  </section>
+  <h2>Low-stock products</h2>
+  @if (summary.lowStockProducts.length === 0) {
+    <p>No low-stock products.</p>
+  } @else {
+    @for (product of summary.lowStockProducts; track product._id) {
+      <p>{{ product.title }} — Stock: {{ product.stock }}</p>
+    }
+  }
+}

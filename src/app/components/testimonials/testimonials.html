@@ -1,0 +1,18 @@
+<h1>Testimonials</h1>
+@if (auth.isLoggedIn()) {
+  <form (submit)="$event.preventDefault(); submit()">
+    <label>Rating
+      <select [ngModel]="rating()" (ngModelChange)="rating.set(+$event)" name="rating">
+        <option [value]="1">1</option><option [value]="2">2</option><option [value]="3">3</option><option [value]="4">4</option><option [value]="5">5</option>
+      </select>
+    </label>
+    <label>Review<textarea [ngModel]="text()" (ngModelChange)="text.set($event)" name="text" required></textarea></label>
+    <button type="submit">Submit Review</button>
+  </form>
+  @if (message()) { <p role="status">{{ message() }}</p> }
+} @else {
+  <p><a routerLink="/login">Login</a> to submit a testimonial.</p>
+}
+@for (item of testimonials(); track item._id) {
+  <article><h2>{{ item.name }}</h2><p>Rating: {{ item.rating }}/5</p><p>{{ item.text }}</p></article>
+}

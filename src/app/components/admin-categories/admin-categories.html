@@ -1,0 +1,38 @@
+<h1>Category Management</h1>
+@if (message()) { <p role="status">{{ message() }}</p> }
+
+<section>
+  <h2>{{ categoryEditingId() ? 'Edit Category' : 'Create Category' }}</h2>
+  <form (submit)="$event.preventDefault(); saveCategory()">
+    <input [ngModel]="categoryName()" (ngModelChange)="categoryName.set($event)" name="categoryName" placeholder="Name" required>
+    <input [ngModel]="categorySlug()" (ngModelChange)="categorySlug.set($event)" name="categorySlug" placeholder="Slug" required>
+    <button type="submit">Save Category</button>
+    @if (categoryEditingId()) { <button type="button" (click)="resetCategory()">Cancel</button> }
+  </form>
+  @for (category of categories(); track category._id) {
+    <div>{{ category.name }} ({{ category.slug }})
+      <button type="button" (click)="editCategory(category)">Edit</button>
+      <button type="button" (click)="deleteCategory(category)">Delete</button>
+    </div>
+  }
+</section>
+
+<section>
+  <h2>{{ subcategoryEditingId() ? 'Edit Subcategory' : 'Create Subcategory' }}</h2>
+  <form (submit)="$event.preventDefault(); saveSubcategory()">
+    <input [ngModel]="subcategoryName()" (ngModelChange)="subcategoryName.set($event)" name="subcategoryName" placeholder="Name" required>
+    <input [ngModel]="subcategorySlug()" (ngModelChange)="subcategorySlug.set($event)" name="subcategorySlug" placeholder="Slug" required>
+    <select [ngModel]="parentCategoryId()" (ngModelChange)="parentCategoryId.set($event)" name="parentCategoryId" required>
+      <option value="">Select parent category</option>
+      @for (category of categories(); track category._id) { <option [value]="category._id">{{ category.name }}</option> }
+    </select>
+    <button type="submit">Save Subcategory</button>
+    @if (subcategoryEditingId()) { <button type="button" (click)="resetSubcategory()">Cancel</button> }
+  </form>
+  @for (subcategory of subcategories(); track subcategory._id) {
+    <div>{{ subcategory.name }} ({{ subcategory.slug }}) - {{ categoryNameFor(subcategory) }}
+      <button type="button" (click)="editSubcategory(subcategory)">Edit</button>
+      <button type="button" (click)="deleteSubcategory(subcategory)">Delete</button>
+    </div>
+  }
+</section>

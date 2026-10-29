@@ -1,0 +1,9 @@
+<h1>Testimonial Management</h1>
+@if (message()) { <p role="status">{{ message() }}</p> }
+@for (item of testimonials(); track item._id) {
+  <article>
+    <h2>{{ item.name }}</h2><p>Rating: {{ item.rating }}/5</p><p>{{ item.text }}</p><p>Status: {{ item.status }}</p>
+    <button type="button" (click)="update(item._id, 'approved')">Approve</button>
+    <button type="button" (click)="update(item._id, 'rejected')">Reject</button>
+  </article>
+}

@@ -1,0 +1,21 @@
+<h1>My Addresses</h1>
+<form (ngSubmit)="add()">
+  <label>Title <input name="title" [ngModel]="title()"
+    (ngModelChange)="title.set($event)" required></label>
+  <label>Address <textarea name="address" [ngModel]="address()"
+    (ngModelChange)="address.set($event)" required></textarea></label>
+  <label>Mobile <input name="mobile" [ngModel]="mobile()"
+    (ngModelChange)="mobile.set($event)" required></label>
+  <button type="submit">Add Address</button>
+</form>
+@if (message()) { <p>{{ message() }}</p> }
+@for (item of addresses(); track item._id) {
+  <section>
+    <h2>{{ item.title }}</h2>
+    <p>{{ item.address }}</p>
+    <p>{{ item.mobile }}</p>
+    @if (item.isDefault) { <strong>Default</strong> }
+    @else { <button type="button" (click)="setDefault(item._id)">Set as default</button> }
+    <button type="button" (click)="remove(item._id)">Delete</button>
+  </section>
+}

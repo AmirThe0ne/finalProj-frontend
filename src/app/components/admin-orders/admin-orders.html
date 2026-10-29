@@ -1,0 +1,95 @@
+
+<section class="admin-orders">
+  <header class="page-header">
+    <div>
+      <h1>Order Management</h1>
+      <p>View customer orders and update their status.</p>
+    </div>
+
+    <button
+      type="button"
+      (click)="loadOrders()"
+      [disabled]="loading() || updatingOrderId() !== ''"
+    >
+      {{ loading() ? 'Loading...' : 'Refresh Orders' }}
+    </button>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="message error" role="alert">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="message success" role="status">{{ successMessage() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Loading orders...</p>
+  } @else if (orders().length === 0 && !errorMessage()) {
+    <p>No orders found.</p>
+  } @else {
+    <p class="order-count">Total orders: {{ orders().length }}</p>
+
+    @for (order of orders(); track order._id) {
+      <article class="order-card">
+        <header class="order-header">
+          <div>
+            <h2>Order #{{ order._id }}</h2>
+            @if (order.createdAt) {
+              <p>{{ order.createdAt | date:'medium' }}</p>
+            }
+          </div>
+
+          <span class="status">{{ order.status }}</span>
+        </header>
+
+        <div class="order-details">
+          <section>
+            <h3>Customer</h3>
+            <p>{{ getCustomerName(order) }}</p>
+            <p>{{ getCustomerEmail(order) }}</p>
+            <p>Mobile: {{ order.mobileSnapshot }}</p>
+            <p>Address: {{ order.addressSnapshot }}</p>
+          </section>
+
+          <section>
+            <h3>Products</h3>
+
+            @for (item of order.items; track $index) {
+              <div class="order-item">
+                <p><strong>{{ getItemTitle(item) }}</strong></p>
+                <p>Quantity: {{ item.quantity }}</p>
+                <p>Price at purchase: {{ item.price }} EGP</p>
+                <p>Subtotal: {{ item.price * item.quantity }} EGP</p>
+              </div>
+            }
+          </section>
+        </div>
+
+        <footer class="order-footer">
+          <div>
+            <h3>Total: {{ order.totalPrice }} EGP</h3>
+            <p>Payment: Cash on Delivery</p>
+          </div>
+
+          <label>
+            Update status
+            <select
+              [value]="order.status"
+              (change)="updateStatus(order, $event)"
+              [disabled]="updatingOrderId() === order._id"
+            >
+              @for (status of statuses; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          @if (updatingOrderId() === order._id) {
+            <p>Updating status...</p>
+          }
+        </footer>
+      </article>
+    }
+  }
+</section>

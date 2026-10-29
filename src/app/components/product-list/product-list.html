@@ -1,0 +1,44 @@
+
+<h1>Our Products</h1>
+
+@if (errorMessage()) {
+  <p role="alert">{{ errorMessage() }}</p>
+} @else {
+  @if (products().length === 0) {
+    <p>Loading products...</p>
+  } @else {
+    <section class="product-filters">
+      <input
+        type="search"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        placeholder="Search products..."
+        aria-label="Search products"
+      >
+
+      <select
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="selectedCategory.set($event)"
+        aria-label="Filter by category"
+      >
+        <option value="">All Categories</option>
+
+        @for (category of categories(); track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </section>
+
+    <p>Number of products: {{ filteredProducts().length }}</p>
+
+    @if (filteredProducts().length === 0) {
+      <p>No products match your search.</p>
+    } @else {
+      <section class="products">
+        @for (product of filteredProducts(); track product._id) {
+          <app-product-card [product]="product"></app-product-card>
+        }
+      </section>
+    }
+  }
+}

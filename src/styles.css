@@ -1,1 +1,116 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f5f4;
+  color: #292524;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #d6d3d1;
+  background: #fafaf9;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+a {
+  color: #2563eb;
+}
+
+a:hover {
+  color: #1d4ed8;
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid #a8a29e;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #292524;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #e7e5e4;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #a8a29e;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #292524;
+  font: inherit;
+}
+
+textarea {
+  min-height: 90px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+th,
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #d6d3d1;
+  text-align: left;
+}
+
+th {
+  background: #e7e5e4;
+}
+
+h1,
+h2 {
+  line-height: 1.2;
+}
+
+footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #d6d3d1;
+  text-align: center;
+}
+
+footer nav {
+  justify-content: center;
+  margin-bottom: 8px;
+  border-bottom: 0;
+  background: transparent;
+}

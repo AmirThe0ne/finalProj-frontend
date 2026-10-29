@@ -1,0 +1,9 @@
+<h1>Contact Us</h1>
+<p>Email: support@example.com</p><p>Phone: +1 555 010 2000</p><p>Address: 123 Fashion Avenue, City</p>
+<form (submit)="$event.preventDefault(); submit()">
+  <label>Name<input [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" required></label>
+  <label>Email<input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" required></label>
+  <label>Message<textarea [ngModel]="message()" (ngModelChange)="message.set($event)" name="message" required></textarea></label>
+  <button type="submit">Send</button>
+</form>
+@if (sent()) { <p role="status">Thank you. Your message has been received.</p> }

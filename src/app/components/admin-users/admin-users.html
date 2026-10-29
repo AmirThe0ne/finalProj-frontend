@@ -1,0 +1,22 @@
+<h1>User Management</h1>
+@if (message()) { <p role="status">{{ message() }}</p> }
+
+<h2>Create Admin</h2>
+<form (submit)="$event.preventDefault(); createAdmin()">
+  <input [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" placeholder="Name" required>
+  <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" placeholder="Email" required>
+  <input type="password" minlength="6" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" placeholder="Password" required>
+  <button type="submit">Create Admin</button>
+</form>
+
+<table>
+  <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Blocked</th><th>Action</th></tr></thead>
+  <tbody>
+    @for (user of users(); track user._id) {
+      <tr>
+        <td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.role }}</td><td>{{ user.isBlocked ? 'Yes' : 'No' }}</td>
+        <td><button type="button" (click)="toggleBlocked(user)" [disabled]="isCurrentUser(user)">{{ user.isBlocked ? 'Unblock' : 'Block' }}</button></td>
+      </tr>
+    }
+  </tbody>
+</table>

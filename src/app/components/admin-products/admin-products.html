@@ -1,0 +1,38 @@
+<h1>Product Management</h1>
+@if (message()) { <p role="status">{{ message() }}</p> }
+
+<h2>{{ editingId() ? 'Edit Product' : 'Create Product' }}</h2>
+<form (submit)="$event.preventDefault(); save()">
+  <input [ngModel]="title()" (ngModelChange)="title.set($event)" name="title" placeholder="Title" required>
+  <textarea [ngModel]="description()" (ngModelChange)="description.set($event)" name="description" placeholder="Description" required></textarea>
+  <input type="number" min="0" [ngModel]="price()" (ngModelChange)="price.set(+$event)" name="price" placeholder="Price" required>
+  <input type="number" min="0" [ngModel]="stock()" (ngModelChange)="stock.set(+$event)" name="stock" placeholder="Stock" required>
+  <select [ngModel]="categoryId()" (ngModelChange)="categoryChanged($event)" name="categoryId" required>
+    <option value="">Select category</option>
+    @for (category of categories(); track category._id) { <option [value]="category._id">{{ category.name }}</option> }
+  </select>
+  <select [ngModel]="subcategoryId()" (ngModelChange)="subcategoryId.set($event)" name="subcategoryId">
+    <option value="">No subcategory</option>
+    @for (subcategory of selectedSubcategories(); track subcategory._id) { <option [value]="subcategory._id">{{ subcategory.name }}</option> }
+  </select>
+  <input [ngModel]="imageUrl()" (ngModelChange)="imageUrl.set($event)" name="imageUrl" placeholder="Image URL">
+  <button type="submit">{{ editingId() ? 'Update Product' : 'Create Product' }}</button>
+  @if (editingId()) { <button type="button" (click)="reset()">Cancel Edit</button> }
+</form>
+
+<table>
+  <thead><tr><th>Title</th><th>Price</th><th>Stock</th><th>Category</th><th>Active</th><th>Actions</th></tr></thead>
+  <tbody>
+    @for (product of products(); track product._id) {
+      <tr>
+        <td>{{ product.title }}</td><td>{{ product.price }}</td><td>{{ product.stock }}</td><td>{{ product.category }}</td>
+        <td>{{ product.isActive ? 'Yes' : 'No' }}</td>
+        <td>
+          <button type="button" (click)="edit(product)">Edit</button>
+          <button type="button" (click)="toggleActive(product)">{{ product.isActive ? 'Deactivate' : 'Activate' }}</button>
+          <button type="button" (click)="deleteProduct(product)">Delete</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

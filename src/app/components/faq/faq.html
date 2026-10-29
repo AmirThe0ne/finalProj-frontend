@@ -1,0 +1,4 @@
+<h1>Frequently Asked Questions</h1>
+@for (faq of faqs(); track faq._id) {
+  <section><h2>{{ faq.question }}</h2><p>{{ faq.answer }}</p></section>
+}

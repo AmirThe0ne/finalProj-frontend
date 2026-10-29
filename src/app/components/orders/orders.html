@@ -1,0 +1,76 @@
+
+<h1>{{ isAdmin() ? 'Manage Orders' : 'My Orders' }}</h1>
+
+<button
+  type="button"
+  (click)="loadOrders()"
+  [disabled]="loading()"
+>
+  {{ loading() ? 'Loading...' : 'Refresh Orders' }}
+</button>
+
+@if (message()) {
+  <p role="status">{{ message() }}</p>
+}
+
+@if (loading()) {
+  <p>Loading orders...</p>
+}
+
+@for (order of orders(); track order._id) {
+  <section class="order-card">
+    <hr />
+
+    <h2>Order #{{ order._id }}</h2>
+
+    @if (order.createdAt) {
+      <p>Date: {{ order.createdAt | date:'medium' }}</p>
+    }
+
+    <p>
+      Status: <strong>{{ order.status }}</strong>
+    </p>
+
+    <p>Total: {{ order.totalPrice }} EGP</p>
+
+    @if (isAdmin()) {
+      <p>Customer: {{ order.user?.name || 'Customer' }}</p>
+      <p>Email: {{ order.user?.email || 'Not available' }}</p>
+    }
+
+    <p>Address: {{ order.addressSnapshot || 'Not available' }}</p>
+    <p>Mobile: {{ order.mobileSnapshot || 'Not available' }}</p>
+
+    <h3>Items</h3>
+
+    @for (item of order.items; track $index) {
+      <p>
+        {{ itemName(item) }}
+        — Quantity: {{ item.quantity }}
+        — Price: {{ item.price }} EGP
+      </p>
+    }
+
+    @if (!isAdmin() && order.status === 'pending') {
+      <button type="button" (click)="cancelOrder(order._id)">Cancel Order</button>
+    }
+
+    @if (isAdmin()) {
+      <label>
+        Change status:
+
+        <select
+          #statusSelect
+          [value]="order.status"
+          (change)="updateStatus(order._id, statusSelect.value)"
+        >
+          @for (status of statuses; track status) {
+            <option [value]="status">
+              {{ status }}
+            </option>
+          }
+        </select>
+      </label>
+    }
+  </section>
+}

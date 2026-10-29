@@ -1,0 +1,11 @@
+<h1>FAQ Management</h1>
+<form (submit)="$event.preventDefault(); save()">
+  <label>Question<input [ngModel]="question()" (ngModelChange)="question.set($event)" name="question" required></label>
+  <label>Answer<textarea [ngModel]="answer()" (ngModelChange)="answer.set($event)" name="answer" required></textarea></label>
+  <label>Order<input type="number" [ngModel]="order()" (ngModelChange)="order.set(+$event)" name="order"></label>
+  <button type="submit">{{ editingId() ? 'Update FAQ' : 'Create FAQ' }}</button>
+  @if (editingId()) { <button type="button" (click)="reset()">Cancel</button> }
+</form>
+@for (faq of faqs(); track faq._id) {
+  <article><h2>{{ faq.question }}</h2><p>{{ faq.answer }}</p><button (click)="edit(faq)">Edit</button><button (click)="remove(faq)">Delete</button></article>
+}

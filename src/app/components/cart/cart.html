@@ -1,0 +1,172 @@
+
+<h1>Shopping Cart</h1>
+
+@if (checkingProducts()) {
+  <p>Checking current prices and stock...</p>
+}
+
+@if (items().length === 0) {
+  <p>Your cart is empty.</p>
+} @else {
+  @for (item of items(); track item.product._id) {
+    <div class="cart-item">
+      <img
+        [src]="item.product.imageUrl"
+        [alt]="item.product.title"
+        width="100"
+      >
+
+      <div>
+        <h3>{{ item.product.title }}</h3>
+
+        @if (item.isPriceChanged) {
+          <p role="alert">
+            The price has changed!
+          </p>
+
+          <p>
+            Previous price: {{ item.originalPrice }} EGP
+          </p>
+
+          <p>
+            New price:
+            <strong>{{ item.product.price }} EGP</strong>
+          </p>
+
+          <button
+            type="button"
+            [disabled]="submitting() || checkingProducts()"
+            (click)="acceptNewPrice(item.product._id)"
+          >
+            Accept New Price
+          </button>
+        } @else {
+          <p>Price: {{ item.product.price }} EGP</p>
+        }
+
+        @if (item.product.stock === 0) {
+          <p>Out of Stock</p>
+        } @else if (item.product.stock <= 3) {
+          <p>Only {{ item.product.stock }} left</p>
+        } @else {
+          <p>Stock: {{ item.product.stock }}</p>
+        }
+
+        <label>
+          Quantity:
+          <input
+            type="number"
+            min="1"
+            [max]="item.product.stock"
+            [value]="item.quantity"
+            [disabled]="
+              submitting() ||
+              checkingProducts() ||
+              item.product.stock === 0
+            "
+            (change)="changeQuantity(
+              item.product._id,
+              $any($event.target).valueAsNumber
+            )"
+          >
+        </label>
+
+        <p>
+          Subtotal:
+          {{ item.product.price * item.quantity }} EGP
+        </p>
+
+        <button
+          type="button"
+          [disabled]="submitting()"
+          (click)="removeItem(item.product._id)"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+
+    <hr>
+  }
+
+  <h2>Total: {{ total() }} EGP</h2>
+
+  <button
+    type="button"
+    [disabled]="submitting()"
+    (click)="clearCart()"
+  >
+    Clear Cart
+  </button>
+
+  <button
+    type="button"
+    [disabled]="submitting() || checkingProducts()"
+    (click)="refreshCurrentProducts()"
+  >
+    Refresh Prices and Stock
+  </button>
+
+  <hr>
+
+  <h2>Checkout</h2>
+
+  <form (submit)="$event.preventDefault(); checkout()">
+    @if (savedAddresses().length > 0) {
+      <label for="savedAddress">Saved Address</label>
+      <select
+        id="savedAddress"
+        name="savedAddress"
+        [ngModel]="selectedAddressId()"
+        (ngModelChange)="selectSavedAddress($event)"
+        [disabled]="submitting()"
+      >
+        <option value="">Enter a new address</option>
+        @for (saved of savedAddresses(); track saved._id) {
+          <option [value]="saved._id">{{ saved.title }}</option>
+        }
+      </select>
+    }
+
+    <label for="address">Delivery Address</label>
+    <textarea
+      id="address"
+      name="address"
+      [ngModel]="address()"
+      (ngModelChange)="address.set($event)"
+      required
+      rows="3"
+      placeholder="Enter your full address"
+      [disabled]="submitting()"
+    ></textarea>
+
+    <label for="mobile">Mobile Number</label>
+    <input
+      id="mobile"
+      name="mobile"
+      type="tel"
+      [ngModel]="mobile()"
+      (ngModelChange)="mobile.set($event)"
+      required
+      placeholder="01xxxxxxxxx"
+      [disabled]="submitting()"
+    >
+
+    <p>Payment: Cash on Delivery</p>
+
+    <button
+      type="submit"
+      [disabled]="disabledReason() !== ''"
+    >
+      {{ submitting() ? 'Placing Order...' : 'Place Order' }}
+    </button>
+
+    @if (disabledReason()) {
+      <p class="checkout-disabled-reason" role="status">{{ disabledReason() }}</p>
+    }
+  </form>
+}
+
+@if (message()) {
+  <p role="status">{{ message() }}</p>
+}

@@ -1,0 +1,28 @@
+
+<div class="product-card">
+  <img
+    [src]="product.imageUrl"
+    [alt]="product.title"
+    width="200"
+  >
+
+  <h2>{{ product.title }}</h2>
+  <p>{{ product.description }}</p>
+  <p>Category: {{ product.category }}</p>
+  <p><strong>{{ product.price }} EGP</strong></p>
+
+  @if (product.stock === 0) {
+    <p>Out of Stock</p>
+    <button type="button" disabled>Add to Cart</button>
+  } @else {
+    @if (product.stock <= 3) {
+      <p>Only {{ product.stock }} left</p>
+    } @else {
+      <p>Stock: {{ product.stock }}</p>
+    }
+
+    <button type="button" (click)="addToCart()">
+      Add to Cart
+    </button>
+  }
+</div>
